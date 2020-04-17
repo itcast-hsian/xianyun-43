@@ -44,12 +44,18 @@
                 <nuxt-link to="/user/login" class="account-link" v-else>
                     登录 / 注册 
                 </nuxt-link>
+
+                {{ $store.state.user.userInfo }}
             </el-row>
         </el-row>
     </header>
 </template>
 <script>
 export default {
+    // mounted只会触发一次
+    mounted(){
+        // console.log(this.$store.state.user.userInfo);
+    },
     methods: {
         // 用户退出
         handleLogout(){},
