@@ -1,5 +1,5 @@
 <template>
-    <!-- model: 声明表单的数据对象 -->
+    <!-- model: 表示声明当前表单的数据对象（这个表单最终的数据存放到data的form对象里面） -->
     <!-- ref: 获取dom元素 -->
     <!-- rules: 表单的验证规则 -->
     <el-form 
@@ -9,15 +9,19 @@
         class="form">
         
         <el-form-item class="form-item">
+            <!-- 用户名输入框 -->
             <el-input 
-            placeholder="用户名/手机">
+            placeholder="用户名/手机" 
+            v-model="form.username">
             </el-input>
         </el-form-item>
 
         <el-form-item class="form-item">
+            <!-- 密码输入框 -->
             <el-input 
             placeholder="密码" 
-            type="password">
+            type="password"
+            v-model="form.password">
             </el-input>
         </el-form-item>
 
@@ -40,7 +44,10 @@ export default {
     data(){
         return {
             // 表单数据
-            form: {},
+            form: {
+                username: "", // 用户名
+                password: "," // 密码
+            },
             // 表单规则
             rules: {},
         }
