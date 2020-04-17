@@ -1,9 +1,22 @@
 <template>
     <div>
+        <!-- 头部组件 -->
+        <Header/>
         <!-- 类似于router-view, 匹配到的组件的坑位 -->
         <nuxt />
     </div>
 </template>
+
+<script>
+// 导入公共组件
+import Header from "@/components/header.vue";
+
+export default {
+    components: {
+        Header
+    }
+}
+</script>
 
 <style>
 * {
