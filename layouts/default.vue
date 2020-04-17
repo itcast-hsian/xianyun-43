@@ -4,16 +4,20 @@
         <Header/>
         <!-- 类似于router-view, 匹配到的组件的坑位 -->
         <nuxt />
+        <!-- 页脚组件 -->
+        <Footer/>
     </div>
 </template>
 
 <script>
 // 导入公共组件
 import Header from "@/components/header.vue";
+import Footer from "@/components/footer.vue";
 
 export default {
     components: {
-        Header
+        Header,
+        Footer
     }
 }
 </script>
