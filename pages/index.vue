@@ -74,6 +74,11 @@ export default {
     methods: {
         // 点击tab触发的事件
         handleTab(index){
+            // 判断是否是点击的机票按钮
+            if(index === 2){
+                this.$router.push("/air")
+            }
+
             this.current = index;
         }
     }
