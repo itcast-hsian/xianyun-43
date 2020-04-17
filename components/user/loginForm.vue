@@ -8,7 +8,7 @@
         :rules="rules" 
         class="form">
         
-        <el-form-item class="form-item">
+        <el-form-item class="form-item" prop="username">
             <!-- 用户名输入框 -->
             <el-input 
             placeholder="用户名/手机" 
@@ -16,7 +16,7 @@
             </el-input>
         </el-form-item>
 
-        <el-form-item class="form-item">
+        <el-form-item class="form-item" prop="password">
             <!-- 密码输入框 -->
             <el-input 
             placeholder="密码" 
@@ -46,10 +46,18 @@ export default {
             // 表单数据
             form: {
                 username: "", // 用户名
-                password: "," // 密码
+                password: "" // 密码
             },
-            // 表单规则
-            rules: {},
+            // 表单规则，里面的输入必须和form统一，上面的属性叫什么下面也得统一
+            rules: {
+                // 手机号码的验证规则，
+                username: [
+                    { required: true, message: "请输入手机号码", trigger: "blur" }
+                ],
+                password: [
+                    { required: true, message: "请输入密码", trigger: "blur" }
+                ]
+            },
         }
     },
     methods: {
