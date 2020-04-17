@@ -63,7 +63,20 @@ export default {
     methods: {
         // 提交登录
         handleLoginSubmit(){
-           console.log(this.form)
+            // 判断element的表单验证是否通过, element的表单都有一个validate这个方法
+            this.$refs.form.validate((valid) => {
+                // valid如果值是true代表验证通过
+                if(valid){
+                    // 请求登录接口
+                    this.$axios({
+                        url: "/accounts/login",
+                        method: "POST",
+                        data: this.form
+                    }).then(res => {
+                        console.log(res);
+                    })
+                }
+            })
         }
     }
 }
