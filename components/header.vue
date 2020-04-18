@@ -56,7 +56,13 @@ export default {
     },
     methods: {
         // 用户退出
-        handleLogout(){},
+        handleLogout(){
+            // 清空store的数据，persistedState插件会监听store的变化，自动同步到本地
+            // 错误的写法: this.$store.state.user.userInfo = {};
+            this.$store.commit("user/setUserInfo", {});
+
+            this.$message.success("退出成功!")
+        },
     }
 }
 </script>
