@@ -95,7 +95,28 @@ export default {
     },
     methods: {
         // 发送验证码
-        handleSendCaptcha() {},
+        handleSendCaptcha() {
+            // 如果手机号码为空，直接返回
+            if(this.form.username === ""){
+                // 主动的触发表单某个属性字段的校验，并且会主动发生错误提示
+                this.$refs.form.validateField("username");
+                return;
+            }
+
+            // 请求发送验证码的接口
+            this.$axios({
+                url: "/captchas",
+                method: "POST",
+                data: {
+                    // 手机号码
+                    tel: this.form.username
+                }
+            }).then(res => {
+                // 接口主要调用成功了，都认为短信已经成功的发送到用户的手机上了
+                const {code} = res.data;
+                this.$message.success("模拟的验证码是: " + code)
+            })
+        },
 
         // 注册
         handleRegSubmit() {
