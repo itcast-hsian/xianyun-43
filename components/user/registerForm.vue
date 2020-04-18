@@ -104,24 +104,30 @@ export default {
             }
 
             // 请求发送验证码的接口
-            this.$axios({
-                url: "/captchas",
-                method: "POST",
-                data: {
-                    // 手机号码
-                    tel: this.form.username
-                }
-            }).then(res => {
-                // 接口主要调用成功了，都认为短信已经成功的发送到用户的手机上了
-                const {code} = res.data;
-                this.$message.success("模拟的验证码是: " + code)
+            this.$store.dispatch("user/sendCaptcha", this.form.username).then(res => {
+                this.$message.success("模拟的验证码是: " + res)
             })
         },
 
         // 注册
         handleRegSubmit() {
             // 请求注册的接口
-            console.log(this.form);
+            // element表单的valiate写法几乎是固定
+            this.$refs.form.validate(valid => {
+                if(valid){
+
+                    // 删除this.form的checkPassword属性
+                    // 解构提取出某个属性，剩余的所有属性用other来表示
+                    const {checkPassword, ...other} = this.form;
+
+                    // 调用actions下的register方法
+                    this.$store.dispatch("user/register", other).then(res => {
+                        this.$message.success("恭喜你，注册成功");
+                        // 跳转到首页
+                        this.$router.push("/")
+                    })
+                }
+            })
         }
     }
 };

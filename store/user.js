@@ -36,5 +36,41 @@ export const actions = {
 
             return data;
         })
+    },
+
+    // 发送手机验证码
+    sendCaptcha(store, tel){
+        // 请求验证码接口
+        return this.$axios({
+            url: "/captchas",
+            method: "POST",
+            data: {
+                // 手机号码
+                tel
+            }
+        }).then(res => {
+            // 接口主要调用成功了，都认为短信已经成功的发送到用户的手机上了
+            const {code} = res.data;
+            return code;
+        })
+    },
+
+    // 注册，注册接口调用成功后和登录的操作是一样
+    register(store, data){
+        return this.$axios({
+            url: "/accounts/register",
+            method: "POST",
+            data
+        }).then(res => {
+            // data是用户的数据
+            const {data} = res;
+
+            // 通过store.commit调用mutations的方法
+            // 由于是在同一个模块下，可以省略前面的user名字
+            store.commit('setUserInfo', data);
+
+            return data;
+        })
     }
+
 }
