@@ -64,34 +64,31 @@ export default {
         // 提交登录
         handleLoginSubmit(){
             // 判断element的表单验证是否通过, element的表单都有一个validate这个方法
-            this.$refs.form.validate((valid) => {
-                // valid如果值是true代表验证通过
-                if(valid){
-                    // 调用actions的方法,.then的参数res是上一个then的返回值决定的
-                    this.$store.dispatch("user/login", this.form).then(res => {
-                        // 弹窗提示
-                        this.$message.success("登录成功,欢迎回来" + res.user.nickname);
-                        // 跳转到首页
-                        this.$router.push("/")
-                    })
-                }
-            })
-
-
-
-
-
-            // this.$refs.form.validate(async (valid) => {
+            // this.$refs.form.validate((valid) => {
             //     // valid如果值是true代表验证通过
             //     if(valid){
-            //         // 调用actions的方法
-            //         await this.$store.dispatch("user/login", this.form);
-            //         // 弹窗提示
-            //         this.$message.success("登录成功");
-            //         // 跳转到首页
-            //         this.$router.push("/")
+            //         // 调用actions的方法,.then的参数res是上一个then的返回值决定的
+            //         this.$store.dispatch("user/login", this.form).then(res => {
+            //             // 弹窗提示
+            //             this.$message.success("登录成功,欢迎回来" + res.user.nickname);
+            //             // 跳转到首页
+            //             this.$router.push("/")
+            //         })
             //     }
             // })
+
+
+            this.$refs.form.validate(async (valid) => {
+                // valid如果值是true代表验证通过
+                if(valid){
+                    // 调用actions的方法, res就是await后面的promise对象then的返回值
+                    const res = await this.$store.dispatch("user/login", this.form);
+                    // 弹窗提示
+                    this.$message.success("登录成功" + res.user.nickname);
+                    // 跳转到首页
+                    this.$router.push("/")
+                }
+            })
         }
     }
 }
