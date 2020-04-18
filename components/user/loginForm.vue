@@ -67,15 +67,31 @@ export default {
             this.$refs.form.validate((valid) => {
                 // valid如果值是true代表验证通过
                 if(valid){
-                    // 调用actions的方法
-                    this.$store.dispatch("user/login", this.form).then(() => {
+                    // 调用actions的方法,.then的参数res是上一个then的返回值决定的
+                    this.$store.dispatch("user/login", this.form).then(res => {
                         // 弹窗提示
-                        this.$message.success("登录成功");
+                        this.$message.success("登录成功,欢迎回来" + res.user.nickname);
                         // 跳转到首页
                         this.$router.push("/")
                     })
                 }
             })
+
+
+
+
+
+            // this.$refs.form.validate(async (valid) => {
+            //     // valid如果值是true代表验证通过
+            //     if(valid){
+            //         // 调用actions的方法
+            //         await this.$store.dispatch("user/login", this.form);
+            //         // 弹窗提示
+            //         this.$message.success("登录成功");
+            //         // 跳转到首页
+            //         this.$router.push("/")
+            //     }
+            // })
         }
     }
 }
