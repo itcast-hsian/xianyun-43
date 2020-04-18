@@ -67,19 +67,12 @@ export default {
             this.$refs.form.validate((valid) => {
                 // valid如果值是true代表验证通过
                 if(valid){
-                    // 请求登录接口
-                    this.$axios({
-                        url: "/accounts/login",
-                        method: "POST",
-                        data: this.form
-                    }).then(res => {
-                        const {data} = res;
-
-                        // 这个写法是错的
-                        // this.$store.state.user.userInfo = data;
-
-                        // 通过this.$store.commit调用mutations的方法
-                        this.$store.commit('user/setUserInfo', data);
+                    // 调用actions的方法
+                    this.$store.dispatch("user/login", this.form).then(() => {
+                        // 弹窗提示
+                        this.$message.success("登录成功");
+                        // 跳转到首页
+                        this.$router.push("/")
                     })
                 }
             })
