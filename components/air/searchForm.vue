@@ -36,6 +36,7 @@
                     placeholder="请搜索到达城市"
                     @select="handleDestSelect"
                     class="el-autocomplete"
+                    v-model="form.destCity"
                 ></el-autocomplete>
             </el-form-item>
 
@@ -74,7 +75,11 @@ export default {
             currentTab: 0,
             // 表单的数据
             form: {
-                departCity: ""
+                departCity: "", // 出发城市
+                departCode: "", // 出发城市的字母代码
+                destCity:"", //到达城市
+                destCode: "", // 到达城市的字母代码
+                departDate: "" // 出发日期
             }
         };
     },
@@ -112,14 +117,38 @@ export default {
         // 目标城市输入框获得焦点时触发
         // value 是选中的值，cb是回调函数，接收要展示的列表
         queryDestSearch(value, cb) {
-            cb([{ value: 1 }, { value: 2 }, { value: 3 }]);
+            // // 如果value值空的，就不需要请求
+            if(!value){
+                return;
+            }
+            // 请求和value相关的城市
+            this.$axios({
+                url: "/airs/city",
+                params: {
+                    name: value
+                }
+            }).then(res => {
+                // data是城市的数组
+                const {data} = res.data;
+                // data的属性没有value属性，需要转换下
+                const newData = data.map(v => {
+                    v.value = v.name.replace("市", "");
+                    return v;
+                })
+                // cb是要请求成功之后才调用，因为在这里才可以拿到城市的数据
+                cb(newData)
+            })
         },
 
         // 出发城市下拉选择时触发
-        handleDepartSelect(item) {},
+        handleDepartSelect(item) {
+            this.form.departCode = item.sort;
+        },
 
         // 目标城市下拉选择时触发
-        handleDestSelect(item) {},
+        handleDestSelect(item) {
+            this.form.destCode = item.sort;
+        },
 
         // 确认选择日期时触发
         handleDate(value) {},
@@ -128,7 +157,9 @@ export default {
         handleReverse() {},
 
         // 提交表单是触发
-        handleSubmit() {}
+        handleSubmit() {
+            console.log(this.form)
+        }
     },
     mounted() {}
 };
