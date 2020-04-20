@@ -41,16 +41,21 @@
                     @blur="handlDestBlur"
                 ></el-autocomplete>
             </el-form-item>
-
+            
+            <!-- 出发时间 -->
             <el-form-item label="出发时间">
                 <!-- change 用户确认选择日期时触发 -->
+                <!-- value-format 设置时间的格式 -->
                 <el-date-picker
                     type="date"
                     placeholder="请选择日期"
                     style="width: 100%;"
                     @change="handleDate"
+                    v-model="form.departDate"
+                    value-format="yyyy-MM-dd"
                 ></el-date-picker>
             </el-form-item>
+
             <el-form-item label>
                 <el-button
                     style="width:100%;"
