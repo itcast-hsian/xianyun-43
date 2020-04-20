@@ -26,6 +26,7 @@
                     @select="handleDepartSelect"
                     class="el-autocomplete"
                     v-model="form.departCity"
+                    @blur="handlDepartBlur"
                 ></el-autocomplete>
             </el-form-item>
 
@@ -37,6 +38,7 @@
                     @select="handleDestSelect"
                     class="el-autocomplete"
                     v-model="form.destCity"
+                    @blur="handlDestBlur"
                 ></el-autocomplete>
             </el-form-item>
 
@@ -80,7 +82,12 @@ export default {
                 destCity:"", //到达城市
                 destCode: "", // 到达城市的字母代码
                 departDate: "" // 出发日期
-            }
+            },
+
+            // 出发城市的下拉列表数据
+            departCities: [],
+            // 出发城市的下拉列表数据
+            destCities: []
         };
     },
     methods: {
@@ -109,9 +116,19 @@ export default {
                     v.value = v.name.replace("市", "");
                     return v;
                 })
+                // 保存到data中，给blur事件使用, 失去焦点时候选中第一个
+                this.departCities = newData;
                 // cb是要请求成功之后才调用，因为在这里才可以拿到城市的数据
                 cb(newData)
             })
+        },
+
+        // 出发城市失去焦点时候默认选中第一个
+        handlDepartBlur(){
+            if(this.departCities.length > 0){
+                this.form.departCity = this.departCities[0].value;
+                this.form.departCode = this.departCities[0].sort;
+            }
         },
 
         // 目标城市输入框获得焦点时触发
@@ -135,9 +152,19 @@ export default {
                     v.value = v.name.replace("市", "");
                     return v;
                 })
+                // 保存到data中，给blur事件使用, 失去焦点时候选中第一个
+                this.destCities = newData;
                 // cb是要请求成功之后才调用，因为在这里才可以拿到城市的数据
                 cb(newData)
             })
+        },
+
+        // 出发城市失去焦点时候默认选中第一个
+        handlDestBlur(){
+            if(this.destCities.length > 0){
+                this.form.destCity = this.destCities[0].value;
+                this.form.destCode = this.destCities[0].sort;
+            }
         },
 
         // 出发城市下拉选择时触发
