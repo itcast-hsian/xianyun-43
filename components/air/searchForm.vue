@@ -101,7 +101,7 @@ export default {
             // 日期禁用选项
             pickerOptions: {
                 disabledDate(time) {
-                    return time.getTime() < Date.now() + 3600 * 1000 * 24;
+                    return time.getTime() < Date.now() - 3600 * 1000 * 24;
                 }
             },
             // 表单的校验规则,trigger是随便填的，默认是blur，主要是blur交互我们觉得不好看，想覆盖掉这个功能
@@ -225,7 +225,12 @@ export default {
             // 表单验证
             this.$refs.form.validate(valid => {
                 if(valid){
-                    console.log(this.form);
+                    // 路由跳转，path指定的路径，query属性指定的问号后面的参数
+                    // 如果是动态参数就使用params
+                    this.$router.push({
+                        path: "/air/flights",
+                        query: this.form
+                    })
                 }
             })
         }
