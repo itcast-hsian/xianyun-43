@@ -13,10 +13,24 @@
                 <FlightsListHead/>
                 
                 <!-- 航班信息 -->
-                <FlightsItem v-for="(item, index) in flightsData.flights"
+                <FlightsItem v-for="(item, index) in dataList"
                 :key="index"
                 :data="item"/>
 
+                <!-- size-change: 切换条数时候触发的事件 -->
+                <!-- current-change：切换页数时候触发的事件 -->
+                <!-- current-page：当前的页数 -->
+                <!-- page-size: 当前的条数 -->
+                <!-- total: 总条数 -->
+                <el-pagination
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="pageIndex"
+                    :page-sizes="[5, 10, 15, 20]"
+                    :page-size="pageSize"
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :total="total">
+                </el-pagination>
             </div>
 
             <!-- 侧边栏 -->
@@ -37,7 +51,15 @@ export default {
     data(){
         return {
             // 总数据, 里面包含了info,flights,total,options属性
-            flightsData: {}
+            flightsData: {},
+            // 这个属性专门用来存放切割出来的数组
+            dataList: [],
+            // 当前的页数
+            pageIndex: 1,
+            // 当前显示的条数
+            pageSize: 5,
+            // 总条数
+            total: 0
         }
     },
     components: {
@@ -47,12 +69,40 @@ export default {
     mounted(){
         // 请求机票列表
         this.$axios({
-            url: "/airs",
+            url: "/airs?pageIndx=2&pageSize=5",
             params: this.$route.query
         }).then(res => {
             // 总的数据，里面包含了info,flights,total,options属性
             this.flightsData = res.data
+            // 请求完成后切割出第一页的数据
+            this.dataList = this.flightsData.flights.slice(0, this.pageSize);
+            // 总条数
+            this.total = this.flightsData.total;
         })
+    },
+    methods: {
+        // 切换条数时候触发的事件
+        handleSizeChange(val){
+            // 显示条数
+            this.pageSize = val;
+            // 一般条数发生了变化会回到第一页
+            this.pageIndex = 1;
+            // 重新切割数组
+            this.dataList = this.flightsData.flights.slice(
+                (this.pageIndex - 1) * this.pageSize, 
+                this.pageIndex * this.pageSize
+            );
+        },
+        // 切换页数时候触发的事件
+        handleCurrentChange(val){
+            // 修改页数
+            this.pageIndex = val;
+            // 重新切割数组
+            this.dataList = this.flightsData.flights.slice(
+                (this.pageIndex - 1) * this.pageSize, 
+                this.pageIndex * this.pageSize
+            );
+        }
     }
 }
 </script>

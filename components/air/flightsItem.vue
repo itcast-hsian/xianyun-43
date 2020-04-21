@@ -1,6 +1,6 @@
 <template>
     <div class="flight-item">
-        <div>
+        <div @click="isShow = !isShow">
             <!-- 显示的机票信息 -->
             <el-row type="flex" align="middle" class="flight-info">
                 <el-col :span="6">
@@ -31,7 +31,7 @@
                 </el-col>
             </el-row>
         </div>
-        <div class="flight-recommend">
+        <div class="flight-recommend" v-show="isShow">
             <!-- 隐藏的座位信息列表 -->
             <el-row type="flex" justify="space-between" align="middle">
                 <el-col :span="4">低价推荐</el-col>
@@ -67,6 +67,12 @@
 
 <script>
 export default {
+    data(){
+        return {
+            // 是否显示座位列表
+            isShow: false
+        }
+    },
 
     // props声明为对象的好处，
     // 1.可以声明类型，避免类型错误（但是不能阻止）
