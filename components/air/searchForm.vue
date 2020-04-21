@@ -119,24 +119,10 @@ export default {
         };
     },
     methods: {
-        // tab切换时触发
-        handleSearchTab(item, index) {},
-
-        // 监听出发城市输入框的变化，一旦输入框的值发生了变化就会触发该事件
-        // value是输入框的值，cb是函数必须要调用
-        // cb接收的参数有个固定的格式，参数必须是一个数组，并且数组是由对象组成的，还有对象必须要有value属性
-        queryDepartSearch(value, cb) {  
-            
-            // 如果value值空的，就不需要请求
-            if(!value){
-                return;
-            }
-
-            // 监听输入框有值的时候重新验证表单，可以消除掉红的报错信息
-            this.$refs.form.validateField("departCity");
-
+        // 封装请求城市的方法
+        getCities(value){
             // 请求和value相关的城市
-            this.$axios({
+            return this.$axios({
                 url: "/airs/city",
                 params: {
                     name: value
@@ -149,10 +135,37 @@ export default {
                     v.value = v.name.replace("市", "");
                     return v;
                 })
+                
+                return newData;
+            })
+        },
+
+        // tab切换时触发
+        handleSearchTab(item, index) {},
+
+        // 监听出发城市输入框的变化，一旦输入框的值发生了变化就会触发该事件
+        // value是输入框的值，cb是函数必须要调用
+        // cb接收的参数有个固定的格式，参数必须是一个数组，并且数组是由对象组成的，还有对象必须要有value属性
+        queryDepartSearch(value, cb) {  
+            
+            // 如果value值空的，就不需要请求
+            if(!value){
+                // 禁止输入框的值是空的时候显示下拉框
+                cb([]);
+                // 如果输入框的值是空的话把之前的城市列表删除掉
+                this.departCities = [];
+                return;
+            }
+
+            // 监听输入框有值的时候重新验证表单，可以消除掉红的报错信息
+            this.$refs.form.validateField("departCity");
+
+            // 根据value请求城市
+            this.getCities(value).then(newData => {
                 // 保存到data中，给blur事件使用, 失去焦点时候选中第一个
                 this.departCities = newData;
                 // cb是要请求成功之后才调用，因为在这里才可以拿到城市的数据
-                cb(newData)
+                cb(newData);
             })
         },
 
@@ -169,30 +182,22 @@ export default {
         queryDestSearch(value, cb) {
             // // 如果value值空的，就不需要请求
             if(!value){
+                // 禁止输入框的值是空的时候显示下拉框
+                cb([]);
+                // 如果输入框的值是空的话把之前的城市列表删除掉
+                this.destCities = [];
                 return;
             }
 
             // 监听输入框有值的时候重新验证表单，可以消除掉红的报错信息
             this.$refs.form.validateField("destCity");
 
-            // 请求和value相关的城市
-            this.$axios({
-                url: "/airs/city",
-                params: {
-                    name: value
-                }
-            }).then(res => {
-                // data是城市的数组
-                const {data} = res.data;
-                // data的属性没有value属性，需要转换下
-                const newData = data.map(v => {
-                    v.value = v.name.replace("市", "");
-                    return v;
-                })
+            // 根据value请求城市
+            this.getCities(value).then(newData => {
                 // 保存到data中，给blur事件使用, 失去焦点时候选中第一个
                 this.destCities = newData;
                 // cb是要请求成功之后才调用，因为在这里才可以拿到城市的数据
-                cb(newData)
+                cb(newData);
             })
         },
 
