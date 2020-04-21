@@ -90,6 +90,13 @@ export default {
 
             const end = arr.split(":"); // [12, 50] 字符串
             const start = dep.split(":"); // [10, 30] 字符串
+            
+            // 如果到达时间的小时小于出发时间的小时，那么就表示到达时间是第二天
+            // 必须是飞行时间不能超过24小时，现实生活不存在这个条件
+            if(end[0] < start[0]){
+                end[0] = +end[0] + 24;
+            }
+
             // 相隔时间,主要要强制转换字符串
             const dis = (end[0] * 60 + +end[1]) - (start[0] * 60 + +start[1]);
             // 小时
