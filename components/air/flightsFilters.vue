@@ -97,7 +97,7 @@ export default {
     computed: {
         // computed的属性如果没有应用函数是不会执行的
         filter(){
-            // 自己思考，看不懂也无所谓
+            // 其他写法：自己思考，看不懂也无所谓
             // const filters = [
             //     { key: "airline_name", value: this.company },
             //     { key: "plane_size", value: this.airSize }
@@ -115,6 +115,7 @@ export default {
 
             // this.$emit("getData", arr);
 
+            // 第一种写法（推荐）
             const arr = this.data.flights.filter(v => {
                 // 先默认所有的航班都是符合条件的
                 let valid = true;
