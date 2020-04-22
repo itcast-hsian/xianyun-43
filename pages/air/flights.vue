@@ -51,9 +51,11 @@ export default {
     data(){
         return {
             // 总数据, 里面包含了info,flights,total,options属性
-            flightsData: {},
+            flightsData: {
+                flights: []
+            },
             // 这个属性专门用来存放切割出来的数组
-            dataList: [],
+            // dataList: [],
             // 当前的页数
             pageIndex: 1,
             // 当前显示的条数
@@ -69,16 +71,25 @@ export default {
     mounted(){
         // 请求机票列表
         this.$axios({
-            url: "/airs?pageIndx=2&pageSize=5",
+            url: "/airs",
             params: this.$route.query
         }).then(res => {
             // 总的数据，里面包含了info,flights,total,options属性
             this.flightsData = res.data
-            // 请求完成后切割出第一页的数据
-            this.dataList = this.flightsData.flights.slice(0, this.pageSize);
             // 总条数
             this.total = this.flightsData.total;
         })
+    },
+    computed: {
+        // 计算属性会监听函数内部所有实例(this)属性的变化
+        // 页面要渲染的机票列表
+        dataList(){
+            const arr = this.flightsData.flights.slice(
+                (this.pageIndex - 1) * this.pageSize, 
+                this.pageIndex * this.pageSize
+            );
+            return arr;
+        }
     },
     methods: {
         // 切换条数时候触发的事件
@@ -87,21 +98,11 @@ export default {
             this.pageSize = val;
             // 一般条数发生了变化会回到第一页
             this.pageIndex = 1;
-            // 重新切割数组
-            this.dataList = this.flightsData.flights.slice(
-                (this.pageIndex - 1) * this.pageSize, 
-                this.pageIndex * this.pageSize
-            );
         },
         // 切换页数时候触发的事件
         handleCurrentChange(val){
             // 修改页数
             this.pageIndex = val;
-            // 重新切割数组
-            this.dataList = this.flightsData.flights.slice(
-                (this.pageIndex - 1) * this.pageSize, 
-                this.pageIndex * this.pageSize
-            );
         }
     }
 }
