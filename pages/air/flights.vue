@@ -11,8 +11,9 @@
                 <FlightsListHead/>
                 
                 <!-- 航班信息 -->
+                <!-- :key：这样写是为了每个分页列表里面的key的值不一样 -->
                 <FlightsItem v-for="(item, index) in dataList"
-                :key="index"
+                :key="`${pageIndex}-` + index"
                 :data="item"/>
 
                 <!-- size-change: 切换条数时候触发的事件 -->
