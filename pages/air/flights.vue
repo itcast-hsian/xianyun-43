@@ -5,7 +5,7 @@
             <!-- 顶部过滤列表 -->
             <div class="flights-content">
                 <!-- 过滤条件 -->
-                <FlightsFilters/>
+                <FlightsFilters :data="flightsData"/>
                 
                 <!-- 航班头部布局 -->
                 <FlightsListHead/>
@@ -52,7 +52,9 @@ export default {
         return {
             // 总数据, 里面包含了info,flights,total,options属性
             flightsData: {
-                flights: []
+                info: {},
+                flights: [],
+                options: {}
             },
             // 这个属性专门用来存放切割出来的数组
             // dataList: [],
