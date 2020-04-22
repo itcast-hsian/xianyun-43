@@ -5,9 +5,7 @@
             <!-- 顶部过滤列表 -->
             <div class="flights-content">
                 <!-- 过滤条件 -->
-                <div>
-                    
-                </div>
+                <FlightsFilters/>
                 
                 <!-- 航班头部布局 -->
                 <FlightsListHead/>
@@ -46,6 +44,8 @@
 import FlightsListHead from "@/components/air/flightsListHead.vue"
 // 机票航班列表
 import FlightsItem from "@/components/air/flightsItem.vue"
+// 机票过滤组件
+import FlightsFilters from "@/components/air/flightsFilters.vue"
 
 export default {
     data(){
@@ -66,7 +66,8 @@ export default {
     },
     components: {
         FlightsListHead,
-        FlightsItem
+        FlightsItem,
+        FlightsFilters
     },
     mounted(){
         // 请求机票列表
