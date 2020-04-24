@@ -49,7 +49,7 @@ import moment from "moment";
 export default {
     mounted(){
         // 在mounted里面是拿不到本地的数据的 （加载的时间问题）
-        console.log(this.$store.state.air.searchList)
+        // console.log(this.$store.state.air.searchList)
     },
     methods: {
         // 点击历史记录列表的事件
