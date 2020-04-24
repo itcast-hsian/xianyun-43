@@ -9,7 +9,11 @@
                 :key="index">
 
                     <el-form-item label="乘机人类型">
-                        <el-input placeholder="姓名" class="input-with-select">
+                        <!-- 重点关注input,忽略select即可 -->
+                        <el-input 
+                        placeholder="姓名" 
+                        class="input-with-select" 
+                        v-model="item.username">
                             <el-select 
                             slot="prepend" 
                             value="1" 
@@ -20,8 +24,11 @@
                     </el-form-item>
 
                     <el-form-item label="证件类型">
+                        <!-- 重点关注input,忽略select即可 -->
                         <el-input 
-                        placeholder="证件号码"  class="input-with-select">
+                        placeholder="证件号码"  
+                        class="input-with-select" 
+                        v-model="item.id">
                             <el-select 
                             slot="prepend" 
                             value="1"           
@@ -30,8 +37,8 @@
                             </el-select>
                         </el-input>
                     </el-form-item>
-
-                    <span class="delete-user" @click="handleDeleteUser()">-</span>
+                    <!-- 删除用户 -->
+                    <span class="delete-user" @click="handleDeleteUser(index)">-</span>
                 </div>
             </el-form>
 
@@ -106,8 +113,9 @@ export default {
         },
         
         // 移除乘机人
-        handleDeleteUser(){
-
+        handleDeleteUser(index){
+            // 根据点击的index移除乘机人
+            this.form.users.splice(index, 1);
         },
         
         // 发送手机验证码
@@ -117,7 +125,7 @@ export default {
 
         // 提交订单
         handleSubmit(){
-            
+            console.log(this.form)
         }
     }
 }
