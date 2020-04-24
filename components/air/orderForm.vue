@@ -178,6 +178,19 @@ export default {
         // 提交订单
         handleSubmit(){
             // 验证先跳过，下次再说
+
+            // 创建订单
+            this.$axios({
+                url: "/airorders",
+                method: "POST",
+                headers: {
+                    // 这里千万要注意Bearer 后面必须要有一个空格（基于JWT标准）
+                    Authorization: `Bearer ` + this.$store.state.user.userInfo.token
+                },
+                data: this.form
+            }).then(res => {
+                this.$message.success("订单提交成功")
+            })
         }
     }
 }

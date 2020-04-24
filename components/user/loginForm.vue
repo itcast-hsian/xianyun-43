@@ -85,8 +85,8 @@ export default {
                     const res = await this.$store.dispatch("user/login", this.form);
                     // 弹窗提示
                     this.$message.success("登录成功" + res.user.nickname);
-                    // 跳转到首页
-                    this.$router.push("/")
+                    // 返回上一页
+                    this.$router.back()
                 }
             })
         }

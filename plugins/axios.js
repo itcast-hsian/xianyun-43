@@ -12,5 +12,12 @@ export default (nuxt) => {
         if(statusCode === 400){
             Message.error(message)
         }
+
+        // 说明当前没有登录
+        if(statusCode === 403){
+            Message.error("当前没有登录");
+            // 跳转到登录页
+            nuxt.redirect("/user/login");
+        }
     })
 }   
