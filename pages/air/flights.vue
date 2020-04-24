@@ -84,13 +84,24 @@ export default {
         // 请求机票列表
         this.fetchList();
     },
-    watch: {
-        // 监听路由的变化
-        $route(){
-            // 一旦路由发生了重新请求数据
-            this.fetchList();
-        }
+    // 1.watch可以监听路由的变化
+    // watch: {
+    //     // 监听路由的变化
+    //     $route(){
+    //         // 一旦路由发生了重新请求数据
+    //         this.fetchList();
+    //     }
+    // },
+    
+    // 2.可以通过组件内的导航守卫来监听路由的变化
+    // 文档地址 https://router.vuejs.org/zh/guide/advanced/navigation-guards.html#组件内的守卫
+    beforeRouteUpdate (to, from, next) {
+        // next必须要执行的函数
+        next();
+        // 一定要先跳转了再获取数据
+        this.fetchList();
     },
+    
     computed: {
         // 计算属性会监听函数内部所有实例(this)属性的变化
         // 页面要渲染的机票列表
