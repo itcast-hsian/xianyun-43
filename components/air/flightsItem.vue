@@ -51,12 +51,21 @@
                             ￥{{item.settle_price}}
                         </el-col>
                         <el-col :span="3" class="choose-button">
-                            <el-button 
-                            type="warning" 
-                            size="mini">
-                            选定
-                            </el-button>
-                            <p>剩余：83</p>
+                            <!-- 不管是router-link或者nuxt-link都可以使用对象的方式来写跳转的路径和参数 -->
+                            <nuxt-link :to="{
+                                path: `/air/order`, 
+                                query: {
+                                    id: data.id,
+                                    seat_xid: item.seat_xid
+                                } 
+                            }">
+                                <el-button 
+                                type="warning" 
+                                size="mini">
+                                选定
+                                </el-button>
+                            </nuxt-link>
+                            <p>剩余：{{item.discount}}</p>
                         </el-col>
                     </el-row>
                 </el-col>
