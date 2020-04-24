@@ -23,25 +23,59 @@
         <div class="history">
             <h5>历史查询</h5>
             <!-- 需要循环的历史记录列表 -->
-            <nuxt-link to="#">
+            <div 
+            v-for="(item, index) in $store.state.air.searchList"
+            :key="index"
+            @click="handleClick(item)"
+            >
                 <el-row type="flex" 
                 justify="space-between" 
                 align="middle"
                 class="history-item">
                     <div class="air-info">
-                        <div class="to-from">广州 - 上海</div>
-                        <p>2019-06-16</p>
+                        <div class="to-from">{{ item.departCity }} - {{ item.destCity }}</div>
+                        <p>{{ item.departDate }}</p>
                     </div>
                     <span>选择</span>
                 </el-row>
-            </nuxt-link>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
-export default {
+import moment from "moment";
 
+export default {
+    mounted(){
+        // 在mounted里面是拿不到本地的数据的 （加载的时间问题）
+        console.log(this.$store.state.air.searchList)
+    },
+    methods: {
+        // 点击历史记录列表的事件
+        handleClick(item){
+            // 复制一份item
+            const data = {...item};
+            // 今天的日期
+            const today = moment().format("YYYY-MM-DD");
+            // 去掉横杆比大小,全局匹配横杆
+            const todayNum = +today.replace(/-/g, "");
+            const departDateNum = +data.departDate.replace(/-/g, "");
+
+            // 如果当前点击的时间如果想小于今天，就把事件改为今天的
+            if( departDateNum < todayNum){
+                // 不能直接改store的数据
+                data.departDate = today;
+            }
+            // 如果大于今天的就跳过，什么都不用改
+            
+            // 跳转到当前点击的页面
+            this.$router.push({
+                path: "/air/flights",
+                query: data
+            })
+        }
+    }
 }
 </script>
 
