@@ -1,9 +1,12 @@
 <template>
     <div class="main">
         <div class="air-column">
-            <h2>剩机人</h2>
+            <h2>乘机人</h2>
             <el-form class="member-info">
-                <div class="member-info-item" >
+                <!-- 乘机人用户列表，根据form.users要循环 -->
+                <div class="member-info-item" 
+                v-for="(item, index) in form.users" 
+                :key="index">
 
                     <el-form-item label="乘机人类型">
                         <el-input placeholder="姓名" class="input-with-select">
@@ -75,10 +78,31 @@
 
 <script>
 export default {
+    data(){
+        return {
+            form: {
+                users: [
+                    { username: "", id: "" },
+                ],                  // 乘机人
+                insurances: [],     // 选中的保险id
+                contactName: "",    // 联系人名字
+                contactPhone: "",   // 联系人电话
+                captcha: "",        // 验证码这个参数接口文档漏掉了
+
+                invoice: false, // 默认不需要发票
+                seat_xid: "",
+                air: "",
+            }
+        }
+    },
     methods: {
         // 添加乘机人
         handleAddUsers(){
-            
+            // 添加多一个乘机人
+            this.form.users.push({
+                username: "",
+                id: ""
+            })
         },
         
         // 移除乘机人
