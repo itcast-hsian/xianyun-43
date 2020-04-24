@@ -33,9 +33,7 @@
             </div>
 
             <!-- 侧边栏 -->
-            <div class="aside">
-                <!-- 侧边栏组件 -->
-            </div>
+            <FlightsAside/>
         </el-row>
     </section>
 </template>
@@ -47,6 +45,8 @@ import FlightsListHead from "@/components/air/flightsListHead.vue"
 import FlightsItem from "@/components/air/flightsItem.vue"
 // 机票过滤组件
 import FlightsFilters from "@/components/air/flightsFilters.vue"
+// 机票过滤组件
+import FlightsAside from "@/components/air/flightsAside.vue"
 
 export default {
     data(){
@@ -77,7 +77,8 @@ export default {
     components: {
         FlightsListHead,
         FlightsItem,
-        FlightsFilters
+        FlightsFilters,
+        FlightsAside
     },
     mounted(){
         // 请求机票列表
