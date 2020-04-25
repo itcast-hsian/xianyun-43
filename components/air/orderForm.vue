@@ -69,13 +69,13 @@
         <div class="air-column">
             <h2>联系人</h2>
             <div class="contact">
-                <el-form label-width="60px">
-                    <el-form-item label="姓名">
+                <el-form label-width="80px" :rules="rules" :model="form" ref="form2">
+                    <el-form-item label="姓名" prop="contactName">
                         <!-- 联系人的姓名 -->
                         <el-input v-model="form.contactName"></el-input>
                     </el-form-item>
 
-                    <el-form-item label="手机">
+                    <el-form-item label="手机"  prop="contactPhone">
                         <!-- 手机号码 -->
                         <el-input placeholder="请输入内容" v-model="form.contactPhone">
                             <template slot="append">
@@ -84,7 +84,7 @@
                         </el-input>
                     </el-form-item>
 
-                    <el-form-item label="验证码">
+                    <el-form-item label="验证码"  prop="captcha">
                         <!-- 手机验证码 -->
                         <el-input v-model="form.captcha"></el-input>
                     </el-form-item>
@@ -150,6 +150,15 @@ export default {
                 users: [
                     // 自定义验证，validatorUser是个函数，在data里面有定义
                     { validator: validatorUser, trigger: "blur" } 
+                ],
+                contactName: [
+                    { required: true, message: "联系人不能为空"}
+                ],
+                contactPhone: [
+                    { required: true, message: "联系人电话不能为空"}
+                ],
+                captcha: [
+                    { required: true, message: "验证码不能为空"}
                 ]
             }
         }
@@ -220,20 +229,25 @@ export default {
         handleSubmit(){
             // 验证表单
             this.$refs.form.validate(valid => {
-                if(valid){
-                    // 创建订单
-                    this.$axios({
-                        url: "/airorders",
-                        method: "POST",
-                        headers: {
-                            // 这里千万要注意Bearer 后面必须要有一个空格（基于JWT标准）
-                            Authorization: `Bearer ` + this.$store.state.user.userInfo.token
-                        },
-                        data: this.form
-                    }).then(res => {
-                        this.$message.success("订单提交成功")
-                    })
-                }
+                // 第二个表单
+                this.$refs.form2.validate(valid2 => {
+                    if(valid && valid2){
+
+                        // 创建订单
+                        this.$axios({
+                            url: "/airorders",
+                            method: "POST",
+                            headers: {
+                                // 这里千万要注意Bearer 后面必须要有一个空格（基于JWT标准）
+                                Authorization: `Bearer ` + this.$store.state.user.userInfo.token
+                            },
+                            data: this.form
+                        }).then(res => {
+                            this.$message.success("订单提交成功")
+                        })
+                    }
+                })
+                
             })
         }
     }
