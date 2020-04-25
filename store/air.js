@@ -2,7 +2,11 @@
 export const state = () => {
     return {
         // 历史查询
-        searchList: []
+        searchList: [],
+        // 选中的机票的详细信息
+        flightData: {
+            seat_infos: {}
+        }
     }
 }
 
@@ -17,5 +21,10 @@ export const mutations = {
             // 只保留数组的前五位
             state.searchList.length = 5;
         }
+    },
+
+    // 存储选中的机票的详细信息
+    setFlightData(state, data){
+        state.flightData = data;
     }
 }

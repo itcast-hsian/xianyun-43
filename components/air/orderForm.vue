@@ -180,6 +180,8 @@ export default {
         }).then(res => {
             // 把机票的信息保存到data,里面有保险和右侧栏需要展示的数据
             this.detail = res.data;
+            // 把详细信息保存到store
+            this.$store.commit("air/setFlightData", this.detail);
         })
     },
     methods: {
