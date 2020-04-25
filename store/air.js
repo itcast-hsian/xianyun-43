@@ -6,7 +6,9 @@ export const state = () => {
         // 选中的机票的详细信息
         flightData: {
             seat_infos: {}
-        }
+        },
+        // 总价格 
+        allPrice: 0
     }
 }
 
@@ -26,5 +28,10 @@ export const mutations = {
     // 存储选中的机票的详细信息
     setFlightData(state, data){
         state.flightData = data;
+    },
+
+    // 存储总价格
+    setAllPrice(state, data){
+        state.allPrice = data;
     }
 }

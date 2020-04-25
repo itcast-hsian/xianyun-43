@@ -1,7 +1,7 @@
 <template>
     <div class="main">
         <div class="air-column">
-            <h2>乘机人{{allPrice}}</h2>
+            <h2>乘机人</h2>
             <el-form class="member-info" ref="form" :rules="rules" :model="form">
                 <!-- 乘机人用户列表，根据form.users要循环 -->
                 <div class="member-info-item" 
@@ -92,6 +92,10 @@
                 <el-button type="warning" class="submit" @click="handleSubmit">提交订单</el-button>
             </div>
         </div>
+        <!-- 为了computed的allPirce能够执行，所以在这里渲染一下，但是不需要展示出来 -->
+        <span v-show="false">
+            {{allPrice}}
+        </span>
     </div>
 </template>
 
@@ -189,6 +193,9 @@ export default {
 
             // 根据人数价格翻倍
             price *= this.form.users.length;
+
+            // 把allPrice保存到store
+            this.$store.commit("air/setAllPrice", price);
 
             return price;
         }

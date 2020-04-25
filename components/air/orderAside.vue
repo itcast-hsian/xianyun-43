@@ -32,7 +32,8 @@
         <el-row type="flex" justify="space-between" class="info-bar">
             <span>成人机票</span>
             <span>￥{{data.seat_infos.org_settle_price}}</span>
-            <span>x1</span>
+            <span>x {{ Math.floor($store.state.air.allPrice / 
+                (data.seat_infos.org_settle_price + data.airport_tax_audlet)) }}</span>
         </el-row>
         <el-row type="flex" justify="space-between" class="info-bar">
             <span>机建＋燃油</span>
@@ -41,7 +42,8 @@
         </el-row>
         <el-row type="flex" justify="space-between" align="middle" class="info-bar">
             <span>应付总额：</span>
-            <span class="price">￥ </span>
+            <!-- 从store中获取总价格 -->
+            <span class="price">￥ {{$store.state.air.allPrice}}</span>
         </el-row>           
     </div>
 </template>
