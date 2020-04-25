@@ -1,7 +1,7 @@
 <template>
     <div class="main">
         <div class="air-column">
-            <h2>乘机人</h2>
+            <h2>乘机人{{allPrice}}</h2>
             <el-form class="member-info" ref="form" :rules="rules" :model="form">
                 <!-- 乘机人用户列表，根据form.users要循环 -->
                 <div class="member-info-item" 
@@ -161,6 +161,36 @@ export default {
                     { required: true, message: "验证码不能为空"}
                 ]
             }
+        }
+    },
+    computed: {
+        allPrice(){
+            // 如果请求还没回来，直接返回为0
+            if(!this.detail.seat_infos){
+                return 0;
+            }
+
+            let price = 0;
+            // 首先先加上单价和燃油费
+            price += this.detail.seat_infos.org_settle_price;
+            price += this.detail.airport_tax_audlet;
+
+            // 循环选中的保险id获取保险的价格
+            this.form.insurances.forEach(v => {
+                // 循环后台返回的保险列表
+                this.detail.insurances.forEach(item => {
+                    // 说明当前的保险是我选中的
+                    if(v == item.id){
+                        // 把当前保险的价格加到总价
+                        price += item.price
+                    }
+                })
+            });
+
+            // 根据人数价格翻倍
+            price *= this.form.users.length;
+
+            return price;
         }
     },
     mounted(){
