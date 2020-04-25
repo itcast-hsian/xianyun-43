@@ -2,43 +2,46 @@
     <div class="main">
         <div class="air-column">
             <h2>乘机人</h2>
-            <el-form class="member-info">
+            <el-form class="member-info" ref="form" :rules="rules" :model="form">
                 <!-- 乘机人用户列表，根据form.users要循环 -->
                 <div class="member-info-item" 
                 v-for="(item, index) in form.users" 
                 :key="index">
 
-                    <el-form-item label="乘机人类型">
-                        <!-- 重点关注input,忽略select即可 -->
-                        <el-input 
-                        placeholder="姓名" 
-                        class="input-with-select" 
-                        v-model="item.username">
-                            <el-select 
-                            slot="prepend" 
-                            value="1" 
-                            placeholder="请选择">
-                                <el-option label="成人" value="1"></el-option>
-                            </el-select>
-                        </el-input>
-                    </el-form-item>
+                    <!-- 由于el-form-item组件可以展示错误信息，由于乘机人和证件号码是一组，所以用一个item组件包起来 -->
+                    <el-form-item prop="users">
+                        <el-form-item label="乘机人类型">
+                            <!-- 重点关注input,忽略select即可 -->
+                            <el-input 
+                            placeholder="姓名" 
+                            class="input-with-select" 
+                            v-model="item.username">
+                                <el-select 
+                                slot="prepend" 
+                                value="1" 
+                                placeholder="请选择">
+                                    <el-option label="成人" value="1"></el-option>
+                                </el-select>
+                            </el-input>
+                        </el-form-item>
 
-                    <el-form-item label="证件类型">
-                        <!-- 重点关注input,忽略select即可 -->
-                        <el-input 
-                        placeholder="证件号码"  
-                        class="input-with-select" 
-                        v-model="item.id">
-                            <el-select 
-                            slot="prepend" 
-                            value="1"           
-                            placeholder="请选择">
-                                <el-option label="身份证" value="1" :checked="true"></el-option>
-                            </el-select>
-                        </el-input>
+                        <el-form-item label="证件类型">
+                            <!-- 重点关注input,忽略select即可 -->
+                            <el-input 
+                            placeholder="证件号码"  
+                            class="input-with-select" 
+                            v-model="item.id">
+                                <el-select 
+                                slot="prepend" 
+                                value="1"           
+                                placeholder="请选择">
+                                    <el-option label="身份证" value="1" :checked="true"></el-option>
+                                </el-select>
+                            </el-input>
+                        </el-form-item>
+                        <!-- 删除用户 -->
+                        <span class="delete-user" @click="handleDeleteUser(index)">-</span>
                     </el-form-item>
-                    <!-- 删除用户 -->
-                    <span class="delete-user" @click="handleDeleteUser(index)">-</span>
                 </div>
             </el-form>
 
@@ -95,6 +98,37 @@
 <script>
 export default {
     data(){
+        // rule代表规则
+        // value是prop绑定的属性的值
+        // callback 是一个回调函数，并且是必须要调用的，如果要报错可以传入一个错误对象
+        const validatorUser = (rule, value, callback) => {
+            // 假设验证是通过的， 如果最后的验证通过就调用callback
+            let valid = true;
+
+            // v是一个对象,比如{username: "a", id: "123"}
+            value.forEach(v => {
+                // 如果验证有一个不通过，后面的判断就没必要再执行
+                if(valid === false) return;
+
+                // 如果username是空的
+                if(v.username.trim() === ""){
+                    valid = false;
+                    return callback(new Error("乘机人姓名不能为空"));
+                }
+
+                // 如果id是空的
+                if(v.id.trim() === ""){
+                    valid = false;
+                    return callback(new Error("乘机人证件号码不能为空"));
+                }
+            })
+
+            // 如果验证全部通过
+            if(valid){
+                callback();
+            }
+        }
+
         return {
             form: {
                 users: [
@@ -110,7 +144,14 @@ export default {
                 air: "",            // 航班id
             },
             // 机票的详细信息
-            detail: {}
+            detail: {},
+            // 验证表单的规则对象
+            rules: {
+                users: [
+                    // 自定义验证，validatorUser是个函数，在data里面有定义
+                    { validator: validatorUser, trigger: "blur" } 
+                ]
+            }
         }
     },
     mounted(){
@@ -177,19 +218,22 @@ export default {
 
         // 提交订单
         handleSubmit(){
-            // 验证先跳过，下次再说
-
-            // 创建订单
-            this.$axios({
-                url: "/airorders",
-                method: "POST",
-                headers: {
-                    // 这里千万要注意Bearer 后面必须要有一个空格（基于JWT标准）
-                    Authorization: `Bearer ` + this.$store.state.user.userInfo.token
-                },
-                data: this.form
-            }).then(res => {
-                this.$message.success("订单提交成功")
+            // 验证表单
+            this.$refs.form.validate(valid => {
+                if(valid){
+                    // 创建订单
+                    this.$axios({
+                        url: "/airorders",
+                        method: "POST",
+                        headers: {
+                            // 这里千万要注意Bearer 后面必须要有一个空格（基于JWT标准）
+                            Authorization: `Bearer ` + this.$store.state.user.userInfo.token
+                        },
+                        data: this.form
+                    }).then(res => {
+                        this.$message.success("订单提交成功")
+                    })
+                }
             })
         }
     }
