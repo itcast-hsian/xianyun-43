@@ -14,7 +14,7 @@ export default (nuxt) => {
         }
 
         // 说明当前没有登录
-        if(statusCode === 403){
+        if(statusCode === 403 || statusCode === 401){
             Message.error("当前没有登录");
             // 跳转到登录页
             nuxt.redirect("/user/login");

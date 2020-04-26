@@ -32,30 +32,64 @@ export default {
     data(){
         return {
             // 订单详细信息
-            detail: {}
+            detail: {},
+            // 定时器的对象
+            timer: ""
         }
     },
     mounted(){
-        setTimeout(() => {
+        // 把setTimeout的函数设置成async函数，函数内部可以使用await来同步执行代码
+        setTimeout(async () => {
             // 请求订单订单详情
-            this.$axios({
+            // await的返回值就是then的函数的参数（res）,也就是请求成功的结果
+            const res = await this.$axios({
                 url: "/airorders/" + this.$route.query.id,
                 headers: {
                     Authorization: `Bearer ` + this.$store.state.user.userInfo.token
                 }
-            }).then(res => {
-                // 主要使用用到价格和支付链接
-                this.detail = res.data;
-                // 根据文档调用toCanvas方法来生成二维码
-                // 文档地址： https://github.com/soldair/node-qrcode#tocanvascanvaselement-text-options-cberror
-                const canvas = document.querySelector("#qrcode-stage");
-                // 第一个参数canvas节点元素
-                // 第二个是生成二维码的链接
-                QRcode.toCanvas(canvas, this.detail.payInfo.code_url, {
-                    width: 200
-                })
             })
+            // 主要使用用到价格和支付链接
+            this.detail = res.data;
+            // 根据文档调用toCanvas方法来生成二维码
+            // 文档地址： https://github.com/soldair/node-qrcode#tocanvascanvaselement-text-options-cberror
+            const canvas = document.querySelector("#qrcode-stage");
+            // 第一个参数canvas节点元素
+            // 第二个是生成二维码的链接
+            QRcode.toCanvas(canvas, this.detail.payInfo.code_url, {
+                width: 200
+            })
+
+            // timer是定时器的对象
+            this.timer = setInterval(async () => {
+                // 每3秒查询支付状态 
+                const checkRes =  await this.$axios({
+                    url: "/airorders/checkpay",
+                    method: "POST",
+                    headers: {
+                        Authorization: `Bearer ` + this.$store.state.user.userInfo.token
+                    },
+                    data: {
+                        id: this.detail.id, // 订单id
+                        nonce_str: this.detail.price, // 订单金额
+                        out_trade_no: this.detail.orderNo
+                    }
+                })
+                // 是否支付成功
+                if(checkRes.data.statusTxt == "支付完成"){
+                    this.$message.success("订单支付成功");
+                    // 停止定时器
+                    clearInterval(this.timer);
+                    // 跳转到机票首页
+                    this.$router.push("/air")
+                }
+            }, 3000)
         }, 0)
+    },
+
+    // 如果组件被卸载或者销毁后（也就是页面切换后），同时也要销毁定时器
+    destroyed(){
+        // 停止定时器
+        clearInterval(this.timer);
     }
 }
 </script>
