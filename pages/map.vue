@@ -7,13 +7,43 @@
 
         <h2>高德地图</h2>
 
-        <div id="container"></div> 
+        <el-row type="flex" align="center" :gutter="32">
+            <!-- 下面的 container中千万不要加内容  -->
+            <el-col :span="12">
+                <div id="container"></div>
+            </el-col>
+            <el-col :span="12">
+                <el-tabs v-model="activeName" type="card" @tab-click="handleClick(activeName)">
+                    <el-tab-pane label="驾车" name="first"></el-tab-pane>
+                    <el-tab-pane label="公交" name="second"></el-tab-pane>
+                    <el-tab-pane label="步行" name="third"></el-tab-pane>
+                </el-tabs>
 
+                <div class="form">
+                    <el-form>
+                        <el-form-item>
+                            <el-input placeholder="起点位置"></el-input>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-input placeholder="终点位置"></el-input>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-button type="primary" style="width: 100%">查询</el-button>
+                        </el-form-item>
+                    </el-form>
+                </div>
+            </el-col>
+        </el-row>
     </div>
 </template>
 
 <script>
 export default {
+    data(){
+        return {
+            activeName: 'first'
+        }
+    },
     mounted(){
         // Amap在模板中导入js文件之后就应经是一个全局变量了
         // map是一个地图的对象
@@ -22,45 +52,59 @@ export default {
             center: [113.3245904, 23.1066805],//中心点坐标
         });
 
+        // ------------------------ 点标记 ----------------------------------//
+
         // 1.默认的，创建一个 Marker 实例：
-        var marker = new AMap.Marker({
-            position: new AMap.LngLat(113.3245904, 23.1066805),   // 经纬度对象，也可以是经纬度构成的一维数组[116.39, 39.9]
-            title: '广州塔'
-        });
+        // var marker = new AMap.Marker({
+        //     position: new AMap.LngLat(113.3245904, 23.1066805),   // 经纬度对象，也可以是经纬度构成的一维数组[116.39, 39.9]
+        //     title: '广州塔'
+        // });
 
-        // 2.通过自定义图片，创建 AMap.Icon 实例：
-        var icon = new AMap.Icon({
-            size: new AMap.Size(40, 40),    // 图标尺寸
-            image: '/images/QQ图片20200426142514.jpg',  // Icon的图像
-            // imageOffset: new AMap.Pixel(0, -60),  // 图像相对展示区域的偏移量，适于雪碧图等
-            imageSize: new AMap.Size(40, 40)   // 根据所设置的大小拉伸或压缩图片
-        });
+        // // 2.通过自定义图片，创建 AMap.Icon 实例：
+        // var icon = new AMap.Icon({
+        //     size: new AMap.Size(40, 40),    // 图标尺寸
+        //     image: '/images/QQ图片20200426142514.jpg',  // Icon的图像
+        //     // imageOffset: new AMap.Pixel(0, -60),  // 图像相对展示区域的偏移量，适于雪碧图等
+        //     imageSize: new AMap.Size(40, 40)   // 根据所设置的大小拉伸或压缩图片
+        // });
 
-        // 创建一个 Marker 实例：
-        var marker2 = new AMap.Marker({
-            position: new AMap.LngLat(113.191098, 23.081027),   // 经纬度对象，也可以是经纬度构成的一维数组[116.39, 39.9]
-            title: '东航同学',
-            // 自定义图标
-            icon: icon
-        });
+        // // 创建一个 Marker 实例：
+        // var marker2 = new AMap.Marker({
+        //     position: new AMap.LngLat(113.191098, 23.081027),   // 经纬度对象，也可以是经纬度构成的一维数组[116.39, 39.9]
+        //     title: '东航同学',
+        //     // 自定义图标
+        //     icon: icon
+        // });
 
-        // 3.自定内容
-        var content = `<div style="
-        width:40px; 
-        height: 40px; 
-        background: url('/images/QQ图片20200426142514.jpg');
-        border-radius: 50%;
-        background-size: 100%">
-        </div>`;
+        // // 3.自定内容
+        // var content = `<div style="
+        // width:40px; 
+        // height: 40px; 
+        // background: url('/images/QQ图片20200426142514.jpg');
+        // border-radius: 50%;
+        // background-size: 100%">
+        // </div>`;
 
-        var marker3 = new AMap.Marker({
-            content: content,  // 自定义点标记覆盖物内容
-            position:  [113.3545904, 23.1066805], // 基点位置
-            offset: new AMap.Pixel(-17, -42) // 相对于基点的偏移位置
-        });
+        // var marker3 = new AMap.Marker({
+        //     content: content,  // 自定义点标记覆盖物内容
+        //     position:  [113.3545904, 23.1066805], // 基点位置
+        //     offset: new AMap.Pixel(-17, -42) // 相对于基点的偏移位置
+        // });
 
         // 将创建的点标记添加到已有的地图实例：
-        map.add([marker, marker2, marker3]);
+        // map.add([marker, marker2, marker3]);
+
+        // ------------------------ 点标记end ----------------------------------//
+
+        // ------------------------ 路线查找 ----------------------------------//
+        
+    },
+
+    methods: {
+        // 点击tab栏切换时候触发的 
+        handleClick(tab) {
+            console.log(tab);
+        }
     }
 };
 </script>
