@@ -162,7 +162,11 @@ export default {
     methods: {
         // 撤销条件时候触发
         handleFiltersCancel(){
-            
+            // 清空搜索的条件
+            this.airport = "";
+            this.flightTimes = "";
+            this.company = "";
+            this.airSize = "";
         },
     }
 }
