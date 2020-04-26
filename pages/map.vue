@@ -32,6 +32,8 @@
                         </el-form-item>
                     </el-form>
                 </div>
+                <!-- 显示路线规划的面板， 不要在这个div里面加内容 -->
+                <div id="panel"></div>
             </el-col>
         </el-row>
     </div>
@@ -115,7 +117,8 @@ export default {
         handleDriving(){
             AMap.plugin('AMap.Driving', () => {
                 var driving = new AMap.Driving({
-                    map: this.map
+                    map: this.map,
+                    panel: "panel"
                 })
                 
                 var points = [
@@ -139,4 +142,20 @@ export default {
 
 <style scoped>
 #container {width:500px; height: 500px; } 
+#panel {
+    background-color: white;
+    max-height: 250px;
+    overflow-y: auto;
+    width: 100%;
+}
+#panel .amap-call {
+    background-color: #009cf9;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+}
+#panel .amap-lib-driving {
+    border-bottom-left-radius: 4px;
+    border-bottom-right-radius: 4px;
+    overflow: hidden;
+}
 </style>
