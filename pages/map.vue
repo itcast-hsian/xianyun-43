@@ -134,6 +134,16 @@ export default {
 
         // 点击查询按钮，开始查询路线
         handleSearch(){
+            // 在开始规划路线之前呢，先清除掉地图上的其他内容
+            this.map = new AMap.Map('container', {
+                zoom:11,//级别
+                center: [113.3245904, 23.1066805],//中心点坐标
+            });
+
+            // 清空panel路线规划面板内容
+            document.querySelector("#panel").innerHTML = "";
+
+            // 查询驾车路线
             this.handleDriving();
         }
     }
