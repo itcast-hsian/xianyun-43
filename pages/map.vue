@@ -3,11 +3,11 @@
 
         <script 
         type="text/javascript" 
-        src="https://webapi.amap.com/maps?v=1.4.15&key=44efad7f524a368a34f95c1855d6fc33"></script>
+        src="https://webapi.amap.com/maps?v=1.4.15&key=44efad7f524a368a34f95c1855d6fc33&plugin=AMap.Driving"></script>
 
         <h2>高德地图</h2>
 
-        <el-row type="flex" align="center" :gutter="32">
+        <el-row type="flex" align="center" :gutter="80">
             <!-- 下面的 container中千万不要加内容  -->
             <el-col :span="12">
                 <div id="container"></div>
@@ -22,13 +22,13 @@
                 <div class="form">
                     <el-form>
                         <el-form-item>
-                            <el-input placeholder="起点位置"></el-input>
+                            <el-input placeholder="起点位置" v-model="start"></el-input>
                         </el-form-item>
                         <el-form-item>
-                            <el-input placeholder="终点位置"></el-input>
+                            <el-input placeholder="终点位置" v-model="end"></el-input>
                         </el-form-item>
                         <el-form-item>
-                            <el-button type="primary" style="width: 100%">查询</el-button>
+                            <el-button type="primary" style="width: 100%;" @click="handleSearch">查询</el-button>
                         </el-form-item>
                     </el-form>
                 </div>
@@ -41,7 +41,10 @@
 export default {
     data(){
         return {
-            activeName: 'first'
+            activeName: 'first', // 当前驾车还是公交或者步行
+            map: "",            // 地图对象
+            start: "",          // 起点位置
+            end: ""             // 终点位置
         }
     },
     mounted(){
@@ -51,6 +54,8 @@ export default {
             zoom:11,//级别
             center: [113.3245904, 23.1066805],//中心点坐标
         });
+
+        this.map = map;
 
         // ------------------------ 点标记 ----------------------------------//
 
@@ -104,6 +109,29 @@ export default {
         // 点击tab栏切换时候触发的 
         handleClick(tab) {
             console.log(tab);
+        },
+        
+        // 查询驾车路线
+        handleDriving(){
+            AMap.plugin('AMap.Driving', () => {
+                var driving = new AMap.Driving({
+                    map: this.map
+                })
+                
+                var points = [
+                    { keyword: this.start, city: '广州' },
+                    { keyword: this.end, city:  '广州' }
+                ]
+                
+                driving.search(points, function (status, result) {
+                    // 未出错时，result即是对应的路线规划方案
+                })
+            })
+        },
+
+        // 点击查询按钮，开始查询路线
+        handleSearch(){
+            this.handleDriving();
         }
     }
 };
