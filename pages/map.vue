@@ -3,7 +3,7 @@
 
         <script 
         type="text/javascript" 
-        src="https://webapi.amap.com/maps?v=1.4.15&key=44efad7f524a368a34f95c1855d6fc33&plugin=AMap.Driving"></script>
+        src="https://webapi.amap.com/maps?v=1.4.15&key=44efad7f524a368a34f95c1855d6fc33&plugin=AMap.Driving,AMap.CitySearch"></script>
 
         <h2>高德地图</h2>
 
@@ -58,6 +58,16 @@ export default {
         });
 
         this.map = map;
+
+        AMap.plugin('AMap.CitySearch',  () => {
+            var citySearch = new AMap.CitySearch()
+            citySearch.getLocalCity( (status, result) => {
+                if (status === 'complete' && result.info === 'OK') {
+                    // 查询成功，result即为当前所在城市信息
+                    this.$message.success("你当前所在的城市是：" + result.city)
+                }
+            })
+        })
 
         // ------------------------ 点标记 ----------------------------------//
 
